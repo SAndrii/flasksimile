@@ -2,15 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from pycall import CallFile, Call, Application
+from pycall import CallFile, Call, Context
 
 def call(number):
-    call = Call('SIP/{}'.format(number), callerid="Asterisk robot <4444>", wait_time=60, retry_time=60, max_retries=2, variables=vars)
-    action = Application('Playback', 'hello-world')
-    c = CallFile(call, action, user='asterisk', archive=True)
+    call = Call('SIP/Avaya/{}'.format(number), callerid="Asterisk robot <4444>", wait_time=60, retry_time=60, max_retries=1, variables=vars)
+    x = Context('fax-tx', 's', '1')
+    c = CallFile(call, x, user='asterisk', archive=True)
     c.spool()
 
-vars = {'FAXFILE': 'some.pdf', 'FAXHEADER': '', 'DESTINATION': '', 'EMAIL': 'andriyshvorak@gmail.com'}
-
-if __name__ == '__main__':
-    call(sys.argv[1])
+vars = {'FAXFILE': '/home/asterisk/261017.tif', 'FAXHEADER': 'loe', 'DESTINATION': '2580'}
+call(vars['DESTINATION'])
